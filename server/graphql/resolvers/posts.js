@@ -41,6 +41,8 @@ module.exports = {
 
       const createdPost = await newPost.save();
 
+      context.pubSub.publish("NEW_POST", { newPost: createdPost });
+
       return createdPost;
     },
 
@@ -59,6 +61,12 @@ module.exports = {
       } catch (error) {
         throw new Error(error);
       }
+    },
+  },
+
+  Subscription: {
+    newPost: {
+      subscribe: (_, __, { pubSub }) => pubSub.asyncIterator("NEW_POST"),
     },
   },
 };
