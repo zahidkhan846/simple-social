@@ -2,11 +2,14 @@ import { useQuery } from "@apollo/client";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Button, Card, Grid, Icon, Image, Label } from "semantic-ui-react";
+import { useHistory } from "react-router-dom";
 import { useAuth } from "../store/AuthReducer";
 import { FETCH_SINGLE_POST } from "../utils/GraphqlQueries";
 import LikeButton from "./LikeButton";
 import moment from "moment";
 import DeleteButton from "./DeleteButton";
+import { CreateComment } from "./CreateComment";
+import CommentCard from "./CommentCard";
 
 function SinglePost() {
   const { user } = useAuth();
@@ -18,6 +21,12 @@ function SinglePost() {
       postId: postId,
     },
   });
+
+  const history = useHistory();
+
+  const cb = () => {
+    history.push("/");
+  };
 
   if (!getPost) {
     return <p>Loading...</p>;
@@ -62,10 +71,19 @@ function SinglePost() {
                   </Label>
                 </Button>
                 {user && user.userName === userName && (
-                  <DeleteButton postId={id} />
+                  <DeleteButton postId={id} cb={cb} />
                 )}
               </Card.Content>
             </Card>
+            {user && <CreateComment postId={id} />}
+            {comments.map((comment) => (
+              <CommentCard
+                key={comment.id}
+                comment={comment}
+                user={user}
+                postId={id}
+              />
+            ))}
           </Grid.Column>
         </Grid.Row>
       </Grid>

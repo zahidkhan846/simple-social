@@ -1,21 +1,33 @@
 import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
-// import { useHistory } from "react-router-dom";
 import { Button, Confirm, Icon } from "semantic-ui-react";
-import { DELETE_POST } from "../utils/GraphqlQueries";
+import {
+  DELETE_COMMENT,
+  DELETE_POST,
+  FETCH_POSTS_QUERY,
+} from "../utils/GraphqlQueries";
 
-function DeleteButton({ postId }) {
+function DeleteButton({ postId, cb, commentId }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  // const history = useHistory();
+  const mutation = commentId ? DELETE_COMMENT : DELETE_POST;
 
-  const [deletePost] = useMutation(DELETE_POST, {
-    update() {
+  const [deleteHandler] = useMutation(mutation, {
+    update(proxy) {
       setIsOpen(false);
-      // history.push("/");
+      if (!commentId) {
+        const data = proxy.readQuery({ query: FETCH_POSTS_QUERY });
+        const updatedPosts = data.posts.filter((post) => post.id !== postId);
+        proxy.writeQuery({
+          query: FETCH_POSTS_QUERY,
+          data: { posts: updatedPosts },
+        });
+      }
+      if (cb) cb();
     },
     variables: {
       postId,
+      commentId,
     },
   });
 
@@ -30,9 +42,10 @@ function DeleteButton({ postId }) {
         <Icon name="trash" style={{ margin: "0" }} />
       </Button>
       <Confirm
+        size="mini"
         open={isOpen}
         onCancel={() => setIsOpen(false)}
-        onConfirm={deletePost}
+        onConfirm={deleteHandler}
       />
     </>
   );

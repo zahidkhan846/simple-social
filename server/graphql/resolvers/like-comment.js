@@ -10,9 +10,7 @@ module.exports = {
       const { userName } = isAuth(context);
 
       if (validator.isEmpty(body)) {
-        throw new UserInputError("Comment empty", {
-          body: "Comment body must not be empty",
-        });
+        throw new UserInputError("Comment body must not be empty");
       }
       const post = await Post.findById(postId);
 
