@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/App.css"],"names":[],"mappings":"AAAA,UACE,WAAY,CACZ,gBACF,CAEA,MACE,WAAY,CACZ,WACF","file":"main.0f93b5fd.chunk.css","sourcesContent":[".posts h1 {\r\n  margin: auto;\r\n  font-size: 2.2rem;\r\n}\r\n\r\n.form {\r\n  width: 450px;\r\n  margin: auto;\r\n}\r\n"]}
