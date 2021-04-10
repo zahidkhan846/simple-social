@@ -23,7 +23,7 @@ function Register() {
       history.push("/");
     },
     onError(error) {
-      setErrors(error.graphQLErrors[0].extensions.errors);
+      setErrors(error.graphQLErrors[0].extensions.exception.errors);
     },
     variables: {
       userName: userName,
